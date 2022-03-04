@@ -3,12 +3,15 @@ namespace Spellenbakkerij {
 	using UnityEngine.Events;
 
 	public class PlayState : ScriptableObject {
-		private float playerProgress;
+		[SerializeField]
+		private float time;
+		public float Time { get => this.time; }
 
-		public float PlayerProgress { get => playerProgress; private set => playerProgress=value; }
-		private UnityEvent<float> playerProgressEvent;
-		public void Test() {
-			//playerProgressEvent.AddListener())
-		}
+		private float maxStamina;
+		private float stamina;
+		private float carreerScore;
+		private float funds;
+		private float relationScore;
+		private float happinessScore;
 	}
 }
