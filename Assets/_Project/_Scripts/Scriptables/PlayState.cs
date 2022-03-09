@@ -3,15 +3,20 @@ namespace Spellenbakkerij {
 	using UnityEngine.Events;
 
 	public class PlayState : ScriptableObject {
-		[SerializeField]
-		private float time;
-		public float Time { get => this.time; }
+		public float Time = 0;
+		public float MaxStamina = 100;
+		private float _stamina = 100;
+		public float CarreerScore = 0;
+		public float Funds = 0;
+		public float RelationScore = 0;
+		public float HappinessScore = 0;
 
-		private float maxStamina;
-		private float stamina;
-		private float carreerScore;
-		private float funds;
-		private float relationScore;
-		private float happinessScore;
+		public float Stamina { get => this._stamina; }
+		public void ModifyStamina(float delta) {
+			this._stamina = Mathf.Clamp(this._stamina + delta, 0, this.MaxStamina);
+			OnStaminaChanged.Invoke(this._stamina);
+		}
+
+		public UnityEvent<float> OnStaminaChanged = new UnityEvent<float>();
 	}
 }

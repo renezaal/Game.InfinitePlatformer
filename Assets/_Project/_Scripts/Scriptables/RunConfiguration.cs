@@ -7,17 +7,24 @@ namespace Spellenbakkerij {
 	[CreateAssetMenu(fileName = "RunConfigurationScriptableObject", menuName = "ScriptableObjects/Run")]
 	public class RunConfiguration : ScriptableObject {
 		[SerializeField]
-		private LevelSegment startSegment;
-		[SerializeField]
-		private LevelSegment[] allowedSegments;
-		[SerializeField]
-		private float minimumLength = 100;
-		[SerializeField]
-		private AnimationCurve obstacleDensity;
+		private LevelSegment _startSegment;
 
-		public LevelSegment StartSegment => this.startSegment;
-		public IEnumerable<LevelSegment> AllowedSegments => this.allowedSegments;
-		public float MinimumLength => this.minimumLength;
-		public AnimationCurve ObstacleDensity => this.obstacleDensity;
+		[SerializeField]
+		private LevelSegment[] _allowedSegments;
+
+		[SerializeField]
+		private float _minimumLength = 100;
+
+		[SerializeField]
+		private AnimationCurve _obstacleDensity;
+
+		[SerializeField]
+		private Vector3 _cameraOffsetFromPlayer = new Vector3(0,0,-10);
+
+		public LevelSegment StartSegment => this._startSegment;
+		public IEnumerable<LevelSegment> AllowedSegments => this._allowedSegments;
+		public float MinimumLength => this._minimumLength;
+		public AnimationCurve ObstacleDensity => this._obstacleDensity;
+		public Vector3 CameraOffsetFromPlayer => this._cameraOffsetFromPlayer;
 	}
 }

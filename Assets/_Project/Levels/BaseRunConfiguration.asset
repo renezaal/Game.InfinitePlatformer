@@ -12,11 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e628228c50864b49b40b2879336cc42, type: 3}
   m_Name: BaseRunConfiguration
   m_EditorClassIdentifier: 
-  startSegment: {fileID: 1239256501815590032, guid: 37bf8b2e7c809b944931bfffe8a06910, type: 3}
-  allowedSegments:
+  _startSegment: {fileID: 1239256501815590032, guid: 37bf8b2e7c809b944931bfffe8a06910, type: 3}
+  _allowedSegments:
   - {fileID: 1239256501815590032, guid: 37bf8b2e7c809b944931bfffe8a06910, type: 3}
-  minimumLength: 100
-  obstacleDensity:
+  - {fileID: 1239256501815590032, guid: 45624b295c534574096289f4ff39b3f8, type: 3}
+  _minimumLength: 100
+  _obstacleDensity:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
@@ -49,8 +50,8 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0.65
       value: 1
-      inSlope: 0.0
-      outSlope: 0.0
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.1735287
@@ -67,3 +68,4 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+  _cameraOffsetFromPlayer: {x: 0, y: 0, z: -10}
