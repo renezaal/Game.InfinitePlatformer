@@ -41,6 +41,7 @@ namespace Spellenbakkerij {
 
 			this._player.transform.position = new Vector3(0, 0.5f, 0);
 			this._playerController = this._player.GetComponent<TarodevController.PlayerController>();
+			this._playerController.SetInputGetter(new InputGetter());
 			this._playerController.OnJumping += this.PlayerController_OnJumping;
 			this._player.gameObject.SetActive(true);
 			this.gameObject.SetActive(true);
