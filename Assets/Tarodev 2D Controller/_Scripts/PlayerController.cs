@@ -1,12 +1,12 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+using UnityEngine;
+
+using Random = UnityEngine.Random;
+
 namespace TarodevController {
-	using System;
-	using System.Collections.Generic;
-	using System.Linq;
-
-	using UnityEngine;
-
-	using Random = UnityEngine.Random;
-
 	/// <summary>
 	/// Hey!
 	/// Tarodev here. I built this controller as there was a severe lack of quality & free 2D controllers out there.
@@ -14,7 +14,7 @@ namespace TarodevController {
 	/// if there's enough interest. You can play and compete for best times here: https://tarodev.itch.io/
 	/// If you hve any questions or would like to brag about your score, come to discord: https://discord.gg/GqeHHnhHpz
 	/// </summary>
-	[RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
+	[RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D), typeof(PlayerControllerInputGetter))]
 	public class PlayerController : MonoBehaviour, IPlayerController {
 		[SerializeField] private bool _allowDoubleJump, _allowDash, _allowCrouch;
 
@@ -28,28 +28,25 @@ namespace TarodevController {
 		public event Action<bool> OnDashingChanged;
 		public event Action<bool> OnCrouchingChanged;
 
+
 		private Rigidbody2D _rb;
 		private BoxCollider2D _collider;
+		private PlayerControllerInputGetter _inputGetter;
 		private Vector3 _lastPosition;
 		private Vector3 _velocity;
 		private float _currentHorizontalSpeed, _currentVerticalSpeed;
 		private int _fixedFrame;
 
-		private IInputGetter _inputGetter;
-
-		public void SetInputGetter(IInputGetter inputGetter) => this._inputGetter = inputGetter;
-
-
 		void Awake() {
 			_rb = GetComponent<Rigidbody2D>();
 			_collider = GetComponent<BoxCollider2D>();
+			_inputGetter = GetComponent<PlayerControllerInputGetter>();
 
 			_defaultColliderSize = _collider.size;
 			_defaultColliderOffset = _collider.offset;
 		}
 
 		private void Update() {
-
 			// Calculate velocity
 			_velocity = (transform.position - _lastPosition) / Time.deltaTime;
 			_lastPosition = transform.position;
@@ -75,16 +72,13 @@ namespace TarodevController {
 		#region Gather Input
 
 		private void GatherInput() {
-			// Get the move vector from the input component.
-			Vector2 moveInput = this._inputGetter.GetMove();
-
 			Input = new FrameInput {
-				JumpDown = this._inputGetter.GetJumpDown(),
-				JumpHeld = this._inputGetter.GetJumpHeld(),
-				DashDown = this._inputGetter.GetDashDown(),
+				JumpDown = _inputGetter.GetJumpDown(),
+				JumpHeld = _inputGetter.GetJumpHeld(),
+				DashDown = _inputGetter.GetDashDown(),
 
-				X = moveInput.x,
-				Y = moveInput.y,
+				X = _inputGetter.GetHorizontalAxis(),
+				Y = _inputGetter.GetVerticalAxis(),
 			};
 
 			if (Input.DashDown)
@@ -100,10 +94,10 @@ namespace TarodevController {
 		#region Collisions
 
 		[Header("COLLISION")] [SerializeField] private LayerMask _groundLayer;
-		[SerializeField] private int _detectorCount = 3;
 		[SerializeField] private float _detectionRayLength = 0.1f;
 
-		private RayRange _raysUp, _raysRight, _raysDown, _raysLeft;
+		private readonly RaycastHit2D[] _hitsDown = new RaycastHit2D[1];
+		private readonly RaycastHit2D[] _hitsDiscard = new RaycastHit2D[1];
 
 		private bool _hittingCeiling, _grounded, _colRight, _colLeft;
 
@@ -113,10 +107,10 @@ namespace TarodevController {
 		// We use these raycast checks for pre-collision information
 		private void RunCollisionChecks() {
 			// Generate ray ranges. 
-			CalculateRayRanged();
+			var b = _collider.bounds;
 
 			// Ground
-			var groundedCheck = RunDetection(_raysDown);
+			var groundedCheck = RunDetection(Vector2.down, _hitsDown);
 			if (_grounded && !groundedCheck) {
 				_timeLeftGrounded = _fixedFrame; // Only trigger when first leaving
 				OnGroundedChanged?.Invoke(false);
@@ -129,31 +123,14 @@ namespace TarodevController {
 			}
 
 			_grounded = groundedCheck;
-			_colLeft = RunDetection(_raysLeft);
-			_colRight = RunDetection(_raysRight);
+			_colLeft = RunDetection(Vector2.left, _hitsDiscard);
+			_colRight = RunDetection(Vector2.right, _hitsDiscard);
 
 			// The rest
-			_hittingCeiling = RunDetection(_raysUp);
+			_hittingCeiling = RunDetection(Vector2.up, _hitsDiscard);
 
-			bool RunDetection(RayRange range) {
-				return EvaluateRayPositions(range).Any(point => Physics2D.Raycast(point, range.Dir, _detectionRayLength, _groundLayer));
-			}
-		}
-
-		private void CalculateRayRanged() {
-			var b = _collider.bounds;
-
-			_raysDown = new RayRange(b.min.x, b.min.y, b.max.x, b.min.y, Vector2.down);
-			_raysUp = new RayRange(b.min.x, b.max.y, b.max.x, b.max.y, Vector2.up);
-			_raysLeft = new RayRange(b.min.x, b.min.y, b.min.x, b.max.y, Vector2.left);
-			_raysRight = new RayRange(b.max.x, b.min.y, b.max.x, b.max.y, Vector2.right);
-		}
-
-
-		private IEnumerable<Vector2> EvaluateRayPositions(RayRange range) {
-			for (var i = 0; i < _detectorCount; i++) {
-				var t = (float)i / (_detectorCount - 1);
-				yield return Vector2.Lerp(range.Start, range.End, t);
+			bool RunDetection(Vector2 dir, RaycastHit2D[] hits) {
+				return Physics2D.BoxCastNonAlloc(b.center, b.size, 0, dir, hits, _detectionRayLength, _groundLayer) > 0;
 			}
 		}
 
@@ -161,15 +138,11 @@ namespace TarodevController {
 			if (!_collider)
 				_collider = GetComponent<BoxCollider2D>();
 
-			// Rays
-			if (!Application.isPlaying)
-				CalculateRayRanged();
 			Gizmos.color = Color.blue;
-			foreach (var range in new List<RayRange> { _raysDown, _raysUp }) {
-				foreach (var point in EvaluateRayPositions(range)) {
-					Gizmos.DrawRay(point, range.Dir * _detectionRayLength);
-				}
-			}
+			var b = _collider.bounds;
+			b.Expand(_detectionRayLength);
+
+			Gizmos.DrawWireCube(b.center, b.size);
 		}
 
 		#endregion
@@ -235,7 +208,7 @@ namespace TarodevController {
 		private void CalculateWalk() {
 			if (Input.X != 0) {
 				// Set horizontal move speed
-				_currentHorizontalSpeed = Mathf.MoveTowards(_currentHorizontalSpeed, _frameClamp * Input.X, _acceleration * Time.fixedDeltaTime);
+				_currentHorizontalSpeed += Input.X * _acceleration * Time.fixedDeltaTime;
 
 				// clamped by max frame movement
 				_currentHorizontalSpeed = Mathf.Clamp(_currentHorizontalSpeed, -_frameClamp, _frameClamp);
@@ -299,7 +272,7 @@ namespace TarodevController {
 		private float _lastJumpPressed = Single.MinValue;
 		private bool _doubleJumpUsable;
 		private bool CanUseCoyote => _coyoteUsable && !_grounded && _timeLeftGrounded + _coyoteTimeThreshold > _fixedFrame;
-		private bool HasBufferedJump => (_grounded || !_executedBufferedJump || _cornerStuck) && _lastJumpPressed + _jumpBuffer > _fixedFrame;
+		private bool HasBufferedJump => ((_grounded && !_executedBufferedJump) || _cornerStuck) && _lastJumpPressed + _jumpBuffer > _fixedFrame;
 		private bool CanDoubleJump => _allowDoubleJump && _doubleJumpUsable && !_coyoteUsable;
 
 		private void CalculateJumpApex() {
@@ -327,6 +300,7 @@ namespace TarodevController {
 
 			// Jump if: grounded or within coyote threshold || sufficient jump buffer
 			if ((_jumpToConsume && CanUseCoyote) || HasBufferedJump) {
+				print(HasBufferedJump);
 				_currentVerticalSpeed = _jumpHeight;
 				_endedJumpEarly = false;
 				_coyoteUsable = false;
@@ -362,7 +336,6 @@ namespace TarodevController {
 			if (!_allowDash)
 				return;
 			if (_dashToConsume && _canDash && !_crouching) {
-				_dashToConsume = false;
 				var vel = new Vector2(Input.X, _grounded && Input.Y < 0 ? 0 : Input.Y);
 				if (vel == Vector2.zero)
 					return;
@@ -387,6 +360,8 @@ namespace TarodevController {
 						_canDash = true;
 				}
 			}
+
+			_dashToConsume = false;
 		}
 
 		#endregion
@@ -397,6 +372,9 @@ namespace TarodevController {
 		private void MoveCharacter() {
 			RawMovement = new Vector3(_currentHorizontalSpeed, _currentVerticalSpeed); // Used externally
 			var move = RawMovement * Time.fixedDeltaTime;
+
+			// Apply effectors
+			move -= EvaluateEffectors();
 
 			_rb.MovePosition(_rb.position + (Vector2) move);
 
@@ -421,6 +399,34 @@ namespace TarodevController {
 		}
 
 		#endregion
+
+		#endregion
+
+		#region Effectors
+
+		/// <summary>
+		/// This allows a variety of movement modifications to be handled externally. Keeping this controller free
+		/// of unique logic like underwater, wind, boosters, gravity zones, etc
+		/// </summary>
+		/// <returns></returns>
+		private Vector3 EvaluateEffectors() {
+			var effectorDirection = Vector3.zero;
+			// Repeat this for other directions and possibly even area effectors. Wind zones, underwater etc
+			effectorDirection += Process(_hitsDown);
+
+			return effectorDirection;
+
+			Vector3 Process(IEnumerable<RaycastHit2D> hits) {
+				foreach (var hit2D in hits) {
+					if (!hit2D.transform)
+						return Vector3.zero;
+					if (hit2D.transform.TryGetComponent(out IPlayerEffector effector)) {
+						return effector.EvaluateEffector();
+					}
+				}
+				return Vector3.zero;
+			}
+		}
 
 		#endregion
 	}
