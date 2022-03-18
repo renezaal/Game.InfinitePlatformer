@@ -297,7 +297,6 @@ namespace TarodevController {
 
 			// Jump if: grounded or within coyote threshold || sufficient jump buffer
 			if ((_jumpToConsume && CanUseCoyote) || HasBufferedJump) {
-				print(HasBufferedJump);
 				_currentVerticalSpeed = _jumpHeight;
 				_endedJumpEarly = false;
 				_coyoteUsable = false;

@@ -4,6 +4,8 @@ namespace Spellenbakkerij {
 
 	public class PlayState : ScriptableObject {
 		public float Time = 0;
+		public float TimeRate = 60;
+		public uint Day = 0;
 		public float MaxStamina = 100;
 		private float _stamina = 100;
 		public float CarreerScore = 0;

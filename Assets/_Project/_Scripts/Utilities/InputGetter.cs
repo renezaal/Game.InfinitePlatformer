@@ -15,7 +15,7 @@ namespace Spellenbakkerij {
 			this._playerControls.Enable();
 		}
 
-		public override bool GetDashDown() => false;
+		public override bool GetDashDown() => this._playerControls.Platformer.Dash.WasPressedThisFrame();
 		public override bool GetJumpDown() => this._playerControls.Platformer.Jump.WasPressedThisFrame();
 		public override bool GetJumpHeld() => this._playerControls.Platformer.Jump.IsPressed();
 

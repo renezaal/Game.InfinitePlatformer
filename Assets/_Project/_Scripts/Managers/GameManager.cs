@@ -1,4 +1,6 @@
 namespace Spellenbakkerij {
+	using TMPro;
+
 	using UnityEngine;
 	using UnityEngine.SceneManagement;
 	using UnityEngine.UI;
@@ -17,6 +19,9 @@ namespace Spellenbakkerij {
 		private Slider _staminaSlider;
 
 		[SerializeField]
+		private TextMeshProUGUI _timeDisplay;
+
+		[SerializeField]
 		private RunConfiguration _runConfigurationForTesting;
 
 		private PlayState _playState;
@@ -32,7 +37,21 @@ namespace Spellenbakkerij {
 		}
 
 		private void FixedUpdate() {
-			_playState.Time += Time.fixedDeltaTime;
+			_playState.Time += Time.fixedDeltaTime * _playState.TimeRate;
+			const int SecondsInMinute = 60;
+			const int SecondsInHour = 60*SecondsInMinute;
+			const int MinutesInHour = 60;
+			const int SecondsInDay = 24*SecondsInHour;
+
+			if (_playState.Time > SecondsInDay) {
+				_playState.Time -= SecondsInDay;
+			}
+
+			int hour = ((int)_playState.Time / SecondsInHour);
+			int minute = ((int)_playState.Time / SecondsInMinute) % MinutesInHour;
+			int second = ((int)_playState.Time) % SecondsInMinute;
+
+			_timeDisplay.text = $"{hour:00}:{minute:00}";
 		}
 
 		private static void UnloadAllScenesExcept(string sceneName) {
