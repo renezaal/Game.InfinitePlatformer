@@ -208,10 +208,7 @@ namespace TarodevController {
 		private void CalculateWalk() {
 			if (Input.X != 0) {
 				// Set horizontal move speed
-				_currentHorizontalSpeed += Input.X * _acceleration * Time.fixedDeltaTime;
-
-				// clamped by max frame movement
-				_currentHorizontalSpeed = Mathf.Clamp(_currentHorizontalSpeed, -_frameClamp, _frameClamp);
+				_currentHorizontalSpeed = Mathf.MoveTowards(_currentHorizontalSpeed, _frameClamp * Input.X, _acceleration * Time.fixedDeltaTime);
 
 				// Apply bonus at the apex of a jump
 				var apexBonus = Mathf.Sign(Input.X) * _apexBonus * _apexPoint;
