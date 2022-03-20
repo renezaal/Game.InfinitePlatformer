@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.18028541, g: 0.22571586, b: 0.30692363, a: 1}
+  m_IndirectSpecularColor: {r: 0.12731749, g: 0.13414757, b: 0.1210787, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -132,6 +132,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1196774912}
+  - component: {fileID: 1196774913}
   m_Layer: 0
   m_Name: Level
   m_TagString: Untagged
@@ -154,6 +155,36 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1196774913
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1196774911}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 277980622
+      Data2: 1198412027
+      Data3: 246155682
+      Data4: -981311664
+    Path: event:/MusicRun
+  Event: 
+  PlayEvent: 0
+  StopEvent: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1935765383
 GameObject:
   m_ObjectHideFlags: 0
@@ -200,6 +231,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _player: {fileID: 8756659604895847208}
   _level: {fileID: 1196774912}
+  _jumpSound:
+    Guid:
+      Data1: -52764018
+      Data2: 1142629381
+      Data3: -437251955
+      Data4: -946117810
+    Path: event:/Jump
 --- !u!1001 &8756659604895847207
 PrefabInstance:
   m_ObjectHideFlags: 0

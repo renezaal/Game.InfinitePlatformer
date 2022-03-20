@@ -12,6 +12,8 @@ namespace Spellenbakkerij {
 		private Transform _player;
 		[SerializeField]
 		private Transform _level;
+		[SerializeField]
+		private FMODUnity.EventReference _jumpSound;
 
 		private bool _initialized = false;
 		private RunConfiguration _configuration;
@@ -51,6 +53,7 @@ namespace Spellenbakkerij {
 
 		private void PlayerController_OnJumping() {
 			this._playState.ModifyStamina(-1f);
+			FMODUnity.RuntimeManager.PlayOneShot(_jumpSound);
 		}
 
 
