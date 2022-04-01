@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9c49f6e34ee8c94ca5526c848661e5e, type: 3}
+  m_Name: AudioConfiguration
+  m_EditorClassIdentifier: 
+  MusicClipMenu: {fileID: 8300000, guid: 935149d2c4343024ea3dd5dd0e6d3470, type: 3}
+  MusicClipRun: {fileID: 8300000, guid: 8091716f8d9c58844a0bc50c371a019f, type: 3}
+  JumpClips:
+  - {fileID: 8300000, guid: 96a0d0e2cb994974c95442ae9457a1fd, type: 3}
+  - {fileID: 8300000, guid: a4729e2d1e6bcbe4aa8a98248fa3f178, type: 3}

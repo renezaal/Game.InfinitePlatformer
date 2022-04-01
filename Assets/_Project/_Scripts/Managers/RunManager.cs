@@ -12,6 +12,8 @@ namespace Spellenbakkerij {
 		private Transform _player;
 		[SerializeField]
 		private Transform _level;
+		[SerializeField]
+		private AudioConfiguration _audioConfiguration;
 
 		private bool _initialized = false;
 		private RunConfiguration _configuration;
@@ -20,10 +22,14 @@ namespace Spellenbakkerij {
 		private LevelSegment _lastAddedSegment;
 		private Camera _camera;
 		private TarodevController.PlayerController _playerController;
+		private AudioSystem _audioSystem;
 
 		public void Initialize(RunConfiguration configuration, PlayState playState) {
 			this._playState = playState;
 			this._configuration = configuration;
+
+			this._audioSystem = FindObjectOfType<AudioSystem>();
+			this._audioSystem.PlayMusic(this._audioConfiguration.MusicClipRun, true);
 
 			LevelSegment start = Instantiate(configuration.StartSegment, -configuration.StartSegment.SegmentStart.position, Quaternion.identity, this._level);
 			float predictedLength = start.SegmentEnd.position.x;
@@ -50,9 +56,9 @@ namespace Spellenbakkerij {
 
 		private void PlayerController_OnJumping() {
 			this._playState.ModifyStamina(-1f);
+			// play jump soundclip
+			this._audioSystem.PlayRandomSound(this._audioConfiguration.JumpClips, 1f);
 		}
-
-
 
 		private void Update() {
 			this._camera.transform.position = this._player.position + this._configuration.CameraOffsetFromPlayer;
@@ -82,6 +88,10 @@ namespace Spellenbakkerij {
 			// TODO: Player out-of-bounds check.
 			// We should be able to get the current segment.
 			// If the player is way lower than the lowest platform of the segment, the player is out of bounds.
+		}
+
+		private void OnDisable() {
+			//this._audioSystem.StopMusic(0.5f);
 		}
 	}
 }

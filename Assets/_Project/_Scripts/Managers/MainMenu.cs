@@ -7,16 +7,20 @@ namespace Spellenbakkerij
     public class MainMenu : MonoBehaviour
     {
 		[SerializeField]
-		AudioSystem audioSystem;
+		private AudioSystem audioSystem;
+
 		[SerializeField]
-		AudioClip musicClip;
+		private AudioConfiguration _audioConfiguration;
 
 		private void OnEnable() {
-			audioSystem.PlayMusic(musicClip, true);
+			audioSystem.PlayMusic(this._audioConfiguration.MusicClipMenu, true);
 		}
 
 		private void OnDisable() {
-			audioSystem.StopMusic(fadeOut: true);
+			// Fade out 0 gezet want anders wordt de run music ook ge-fadeout
+			// Zit in zelfde audiosource
+			// TODO: oplossing voor bedenken
+			//audioSystem.StopMusic(fadeTime: 0f);
 		}
 	}
 }

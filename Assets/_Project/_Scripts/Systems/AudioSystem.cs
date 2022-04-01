@@ -17,9 +17,9 @@ namespace Spellenbakkerij {
 			_musicSource.Play();
 		}
 
-		public void StopMusic(bool fadeOut = false) {
-			if (fadeOut) {
-				FadeOutMusic();
+		public void StopMusic(float fadeTime = 0f) {
+			if (fadeTime > 0) {
+				FadeOutMusic(fadeTime);
 				return;
 			}
 			_musicSource.Stop();
@@ -29,9 +29,9 @@ namespace Spellenbakkerij {
 			get { return _musicSource.isPlaying; }
 		}
 
-		public void FadeOutMusic() {
+		private void FadeOutMusic(float fadeTime) {
 			if (_musicSource.isPlaying) {
-				FadeOut(_musicSource, 1);
+				StartCoroutine(FadeOut(_musicSource, fadeTime));
 			}
 		}
 
@@ -48,13 +48,17 @@ namespace Spellenbakkerij {
 			audioSource.volume = startVolume;
 		}
 
-		public void PlaySound(AudioClip clip, Vector3 pos, float vol = 1) {
+		public void PlaySound(AudioClip clip, Vector3 pos, float volume = 1) {
 			_soundsSource.transform.position = pos;
-			PlaySound(clip, vol);
+			PlaySound(clip, volume);
 		}
 
-		public void PlaySound(AudioClip clip, float vol = 1) {
-			_soundsSource.PlayOneShot(clip, vol);
+		public void PlaySound(AudioClip clip, float volume = 1) {
+			_soundsSource.PlayOneShot(clip, volume);
+		}
+
+		public void PlayRandomSound(AudioClip[] clips, float volume = 1) {
+			this.PlaySound(clips[Random.Range(0, clips.Length)], volume);
 		}
 	}
 }
