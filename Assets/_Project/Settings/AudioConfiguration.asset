@@ -12,8 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9c49f6e34ee8c94ca5526c848661e5e, type: 3}
   m_Name: AudioConfiguration
   m_EditorClassIdentifier: 
-  MusicClipMenu: {fileID: 8300000, guid: 935149d2c4343024ea3dd5dd0e6d3470, type: 3}
-  MusicClipRun: {fileID: 8300000, guid: 8091716f8d9c58844a0bc50c371a019f, type: 3}
+  MusicClipMenu: {fileID: 8300000, guid: 140a4f0ccc8670c43814e4d3defa0330, type: 3}
+  MusicClipRun: {fileID: 8300000, guid: 3f05625b8ce6dcd428069d14bfae1e96, type: 3}
   JumpClips:
   - {fileID: 8300000, guid: 96a0d0e2cb994974c95442ae9457a1fd, type: 3}
   - {fileID: 8300000, guid: a4729e2d1e6bcbe4aa8a98248fa3f178, type: 3}
+  - {fileID: 8300000, guid: f58c01ce39a74b84da7e05687da10fbd, type: 3}
+  - {fileID: 8300000, guid: 29783cd54b8eca64292139d64e7f37ba, type: 3}
+  - {fileID: 8300000, guid: f2b615cb3764fa14da4e83c78e418ced, type: 3}
