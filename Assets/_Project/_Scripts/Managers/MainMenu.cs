@@ -13,7 +13,8 @@ namespace Spellenbakkerij
 		private AudioConfiguration _audioConfiguration;
 
 		private void OnEnable() {
-			audioSystem.PlayMusic(this._audioConfiguration.MusicClipMenu, true);
+      		audioSystem.PlayMusic(this._audioConfiguration.MusicClipMenu, loop: false, playNow: true);
+			audioSystem.PlayMusic(this._audioConfiguration.MusicClipRun, loop: true);
 		}
 
 		private void OnDisable() {
