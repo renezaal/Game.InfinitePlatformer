@@ -12,8 +12,31 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c9c49f6e34ee8c94ca5526c848661e5e, type: 3}
   m_Name: AudioConfiguration
   m_EditorClassIdentifier: 
-  MusicClipMenu: {fileID: 8300000, guid: 140a4f0ccc8670c43814e4d3defa0330, type: 3}
-  MusicClipRun: {fileID: 8300000, guid: 3f05625b8ce6dcd428069d14bfae1e96, type: 3}
+  MusicSets:
+  - name: Menu
+    clips:
+    - audioClip: {fileID: 8300000, guid: 4db0b89e500ca124ca67f75f14fd28fb, type: 3}
+      playAsSoonAsPossible: 0
+      loop: 0
+      repeat: 0
+    - audioClip: {fileID: 8300000, guid: 140a4f0ccc8670c43814e4d3defa0330, type: 3}
+      playAsSoonAsPossible: 0
+      loop: 1
+      repeat: 0
+    fadein: 0
+    fadeout: 0
+  - name: Run
+    clips:
+    - audioClip: {fileID: 8300000, guid: c66aacfd668acc44fb414d3c7a5d2511, type: 3}
+      playAsSoonAsPossible: 0
+      loop: 0
+      repeat: 0
+    - audioClip: {fileID: 8300000, guid: 3f05625b8ce6dcd428069d14bfae1e96, type: 3}
+      playAsSoonAsPossible: 0
+      loop: 1
+      repeat: 0
+    fadein: 0
+    fadeout: 0
   JumpClips:
   - {fileID: 8300000, guid: 96a0d0e2cb994974c95442ae9457a1fd, type: 3}
   - {fileID: 8300000, guid: a4729e2d1e6bcbe4aa8a98248fa3f178, type: 3}
