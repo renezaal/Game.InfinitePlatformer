@@ -25,10 +25,13 @@ MonoBehaviour:
     fadeout: 0.5
   - name: Run
     clips:
-    - audioClip: {fileID: 8300000, guid: c66aacfd668acc44fb414d3c7a5d2511, type: 3}
+    - audioClip: {fileID: 8300000, guid: 3f05625b8ce6dcd428069d14bfae1e96, type: 3}
+      loop: 0
+      repeat: 0
+    - audioClip: {fileID: 8300000, guid: b587ad463724201438b8df67207cb89a, type: 3}
       loop: 1
       repeat: 0
-    fadein: 0
+    fadein: 1
     fadeout: 1
   JumpClips:
   - {fileID: 8300000, guid: 96a0d0e2cb994974c95442ae9457a1fd, type: 3}

@@ -14,6 +14,9 @@ namespace Spellenbakkerij {
 		private AudioSource[] _musicSource;
 		private int _musicSourceIndex;
 
+		/// <summary>
+		/// This is an internal pointer to the exact (Double) moment that the current Clip will stop playing
+		/// </summary>
 		private double _musicCurrentPlayingEndTime;
 		private (AudioSource MusicSource, double StartFade, float FadeTime, bool Active) _musicFadeOut;
 		private (AudioSource MusicSource, double StartFade, float FadeTime, bool Active) _musicFadeIn;
@@ -36,26 +39,29 @@ namespace Spellenbakkerij {
 		}
 
 		internal void PlayMusic(MusicSet musicSet) {
-			// if previous MusicSet is playing, fade out?
 			if (this.IsPlaying) {
+				// if previous MusicSet is playing, fadeout old and fadein new
 				// longest of both fadein and fadeout time
-				float time = Math.Max(this._musicSet.fadeout, musicSet.fadein);
-				// new end time
-				double endtime = AudioSettings.dspTime + Math.Max(time, MusicPrepartationDelay);
+				float longestTime = Math.Max(this._musicSet.fadeout, musicSet.fadein);
+				// cross over time
+				double crossOverTime = AudioSettings.dspTime + Math.Max(longestTime, MusicPrepartationDelay);
 
 				// set fadeout
-				this._musicFadeOut = (this.ActiveMusicSource, endtime - this._musicSet.fadeout, this._musicSet.fadeout, false);
+				this._musicFadeOut = (this.ActiveMusicSource, crossOverTime - this._musicSet.fadeout, this._musicSet.fadeout, false);
 				// set fadein
-				this._musicFadeIn = (this.OtherMusicSource, endtime - musicSet.fadein, musicSet.fadein, false);
+				this._musicFadeIn = (this.OtherMusicSource, crossOverTime - musicSet.fadein, musicSet.fadein, false);
 
-				this._musicCurrentPlayingEndTime = endtime;
+				this._musicCurrentPlayingEndTime = crossOverTime;
 			} else {
+				// if not, just fadein new
 				// set fadein
 				this._musicFadeIn = (this.OtherMusicSource, AudioSettings.dspTime + MusicPrepartationDelay, musicSet.fadein, false);
 
 				this._musicCurrentPlayingEndTime = AudioSettings.dspTime + Math.Max(musicSet.fadein, MusicPrepartationDelay);
 			}
 
+			// Replace current music set with the new one
+			// TODO: This could be a problem if the currently playing music set is replaced?
 			this._musicSet = musicSet;
 			this._musicSet.Index = 0;
 			this.IsPlaying = true;
@@ -66,18 +72,21 @@ namespace Spellenbakkerij {
 			// time to schedule next music clip
 			if (this._musicSet.Index < this._musicSet.clips.Length && AudioSettings.dspTime > this._musicCurrentPlayingEndTime - MusicPrepartationDelay) {
 				Clip clip = this._musicSet.clips[this._musicSet.Index++];
+				Debug.Log($"AudioSystem.Update(): {AudioSettings.dspTime} > {this.OtherMusicSource.GetInstanceID()} > Enqueue {clip.audioClip.name} at {this._musicCurrentPlayingEndTime}");
 				EnqueueMusic(clip);
 			}
 
 			// time to start fadeout
 			if (!this._musicFadeOut.Active && this._musicFadeOut.StartFade > 0 && AudioSettings.dspTime > this._musicFadeOut.StartFade) {
 				this._musicFadeOut.Active = true;
+				Debug.Log($"AudioSystem.Update(): {AudioSettings.dspTime} > {this._musicFadeOut.MusicSource.GetInstanceID()} > Fadeout at {this._musicFadeOut.StartFade} length {this._musicFadeOut.FadeTime}");
 				_ = this.StartCoroutine(FadeOutMusic(this._musicFadeOut.MusicSource, this._musicFadeOut.FadeTime));
 			}
 
 			// time to start fadein
 			if (!this._musicFadeIn.Active && this._musicFadeIn.StartFade > 0 && AudioSettings.dspTime > this._musicFadeIn.StartFade) {
 				this._musicFadeIn.Active = true;
+				Debug.Log($"AudioSystem.Update(): {AudioSettings.dspTime} > {this._musicFadeIn.MusicSource.GetInstanceID()} > Fadein at {this._musicFadeIn.StartFade} length {this._musicFadeIn.FadeTime}");
 				_ = this.StartCoroutine(FadeInMusic(this._musicFadeIn.MusicSource, this._musicFadeIn.FadeTime));
 			}
 		}
@@ -94,8 +103,8 @@ namespace Spellenbakkerij {
 			this.ToggleMusicSource();
 			this.ActiveMusicSource.clip = clip.audioClip;
 			this.ActiveMusicSource.loop = clip.loop;
+			Debug.Log($"AudioSystem.EnqueueMusic(): {AudioSettings.dspTime} > {this.ActiveMusicSource.GetInstanceID()} > {clip.audioClip.name} loop={clip.loop} _musicSourceIndex={this._musicSourceIndex} _musicCurrentPlayingEndTime={_musicCurrentPlayingEndTime}");
 			this.ActiveMusicSource.PlayScheduled(this._musicCurrentPlayingEndTime);
-			Debug.Log($"{AudioSettings.dspTime}: PlayMusic: {clip.audioClip.name} loop={clip.loop} _musicSourceIndex={this._musicSourceIndex} _musicCurrentPlayingEndTime={_musicCurrentPlayingEndTime}");
 
 			if (!clip.loop) {
 				this._musicCurrentPlayingEndTime += clip.Duration;
