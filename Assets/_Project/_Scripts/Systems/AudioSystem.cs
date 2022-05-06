@@ -38,7 +38,7 @@ namespace Spellenbakkerij {
 			this._inactiveMusicSource = this.gameObject.AddComponent<AudioSource>();
 			Debug.Assert(ScheduleAheadDuration > MusicPreparationDelay, "Plantijd moet groter zijn dan de voorbereidingstijd");
 
-			this._scheduleEndTime = AudioSettings.dspTime;
+			this._scheduleEndTime = AudioSettings.dspTime + ScheduleAheadDuration + MusicPreparationDelay;
 
 			base.Awake();
 		}
