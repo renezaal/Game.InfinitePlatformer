@@ -13,25 +13,25 @@ MonoBehaviour:
   m_Name: AudioConfiguration
   m_EditorClassIdentifier: 
   MusicSetMenu:
-    clips:
+    Intro:
     - audioClip: {fileID: 8300000, guid: 140a4f0ccc8670c43814e4d3defa0330, type: 3}
-      loop: 0
-      repeat: 0
+      Iterations: 1
+    Loop:
     - audioClip: {fileID: 8300000, guid: 1d447446ee547c94680d97ca9b88e843, type: 3}
-      loop: 1
-      repeat: 0
-    fadein: 0.6
-    fadeout: 0.6
+      Iterations: 1
+    FadeIn: 0.6
+    FadeOut: 0.6
+    FadeOverlap: 0
   MusicSetRun:
-    clips:
+    Intro:
+    - audioClip: {fileID: 8300000, guid: c66aacfd668acc44fb414d3c7a5d2511, type: 3}
+      Iterations: 1
+    Loop:
     - audioClip: {fileID: 8300000, guid: 3f05625b8ce6dcd428069d14bfae1e96, type: 3}
-      loop: 0
-      repeat: 0
-    - audioClip: {fileID: 8300000, guid: ca0bdefb8a6546f45bfabd77a0d8d525, type: 3}
-      loop: 1
-      repeat: 0
-    fadein: 0.6
-    fadeout: 0.6
+      Iterations: 1
+    FadeIn: 0.6
+    FadeOut: 0.6
+    FadeOverlap: 0
   JumpClips:
   - {fileID: 8300000, guid: 96a0d0e2cb994974c95442ae9457a1fd, type: 3}
   - {fileID: 8300000, guid: a4729e2d1e6bcbe4aa8a98248fa3f178, type: 3}
