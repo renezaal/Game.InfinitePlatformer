@@ -29,7 +29,7 @@ namespace Spellenbakkerij {
 			this._configuration = configuration;
 
 			this._audioSystem = FindObjectOfType<AudioSystem>();
-			this._audioSystem.PlayMusic(this._audioConfiguration.FindMusicSetByName("Run"));
+			this._audioSystem.PlayMusic(this._audioConfiguration.MusicSetRun);
 
 			LevelSegment start = Instantiate(configuration.StartSegment, -configuration.StartSegment.SegmentStart.position, Quaternion.identity, this._level);
 			float predictedLength = start.SegmentEnd.position.x;

@@ -4,8 +4,7 @@
 	using UnityEngine;
 
 	[Serializable]
-	internal class MusicSet {
-		public string name;
+	public class MusicSet {
 		public Clip[] clips;
 		public float fadein;
 		public float fadeout;
@@ -14,7 +13,7 @@
 	}
 
 	[Serializable]
-	internal class Clip {
+	public class Clip {
 		public AudioClip audioClip;
 		public bool loop;
 		/// <summary>

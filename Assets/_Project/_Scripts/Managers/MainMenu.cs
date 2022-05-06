@@ -10,7 +10,7 @@ namespace Spellenbakkerij {
 		private AudioConfiguration _audioConfiguration;
 
 		private void OnEnable() {
-			this.audioSystem.PlayMusic(this._audioConfiguration.FindMusicSetByName("Menu"));
+			this.audioSystem.PlayMusic(this._audioConfiguration.MusicSetMenu);
 		}
 	}
 }

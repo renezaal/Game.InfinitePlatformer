@@ -68,8 +68,9 @@ namespace Spellenbakkerij {
 			// set endtime
 		}
 
-		private void Update() {
+		private void FixedUpdate() {
 			// time to schedule next music clip
+			// It does this MusicPrepartationDelay before the end time of the currently playing clip
 			if (this._musicSet.Index < this._musicSet.clips.Length && AudioSettings.dspTime > this._musicCurrentPlayingEndTime - MusicPrepartationDelay) {
 				Clip clip = this._musicSet.clips[this._musicSet.Index++];
 				Debug.Log($"AudioSystem.Update(): {AudioSettings.dspTime} > {this.OtherMusicSource.GetInstanceID()} > Enqueue {clip.audioClip.name} at {this._musicCurrentPlayingEndTime}");
@@ -89,10 +90,20 @@ namespace Spellenbakkerij {
 				Debug.Log($"AudioSystem.Update(): {AudioSettings.dspTime} > {this._musicFadeIn.MusicSource.GetInstanceID()} > Fadein at {this._musicFadeIn.StartFade} length {this._musicFadeIn.FadeTime}");
 				_ = this.StartCoroutine(FadeInMusic(this._musicFadeIn.MusicSource, this._musicFadeIn.FadeTime));
 			}
+
+			//var cr = this.StartCoroutine(Testje(this._musicSet.clips[this._musicSet.Index++], 1, 1));
+			//this.StopCoroutine(cr);
+		}
+
+		private IEnumerator Testje(Clip clip, float delay, float fadeTime) {
+			DateTime moment = DateTime.Parse("10:00");
+			yield return new WaitUntil(() => moment < DateTime.Now);
+
 		}
 
 		/// <summary>
 		/// Enqueues a music clip.
+		/// It PlaySchedules the first clip to start after the current playing clip
 		/// </summary>
 		/// <param name="clip"></param>
 		/// <param name="loop">When true, this clip will loop. If an additional clip is enqueued after this one the loop will be ignored.</param>
@@ -103,7 +114,7 @@ namespace Spellenbakkerij {
 			this.ToggleMusicSource();
 			this.ActiveMusicSource.clip = clip.audioClip;
 			this.ActiveMusicSource.loop = clip.loop;
-			Debug.Log($"AudioSystem.EnqueueMusic(): {AudioSettings.dspTime} > {this.ActiveMusicSource.GetInstanceID()} > {clip.audioClip.name} loop={clip.loop} _musicSourceIndex={this._musicSourceIndex} _musicCurrentPlayingEndTime={_musicCurrentPlayingEndTime}");
+			Debug.Log($"AudioSystem.EnqueueMusic(): {AudioSettings.dspTime} > {this.ActiveMusicSource.GetInstanceID()} > {clip.audioClip.name}, loop={clip.loop}, _musicSourceIndex={this._musicSourceIndex}, _musicCurrentPlayingEndTime={_musicCurrentPlayingEndTime}");
 			this.ActiveMusicSource.PlayScheduled(this._musicCurrentPlayingEndTime);
 
 			if (!clip.loop) {
