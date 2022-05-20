@@ -24,10 +24,10 @@ MonoBehaviour:
     FadeOverlap: 0
   MusicSetRun:
     Intro:
-    - audioClip: {fileID: 8300000, guid: c66aacfd668acc44fb414d3c7a5d2511, type: 3}
+    - audioClip: {fileID: 8300000, guid: 3f05625b8ce6dcd428069d14bfae1e96, type: 3}
       Iterations: 1
     Loop:
-    - audioClip: {fileID: 8300000, guid: 3f05625b8ce6dcd428069d14bfae1e96, type: 3}
+    - audioClip: {fileID: 8300000, guid: c66aacfd668acc44fb414d3c7a5d2511, type: 3}
       Iterations: 1
     FadeIn: 0.6
     FadeOut: 0.6

@@ -17,7 +17,7 @@ namespace Spellenbakkerij {
 		private AudioSource _inactiveMusicSource;
 
 		private const float MusicPreparationDelay = 0.6f;
-		private const float ScheduleAheadDuration = 1f;
+		private const float ScheduleAheadDuration = 1.2f;
 		private MusicSet _musicSet;
 		private MusicSet _nextMusicSet;
 
@@ -93,7 +93,7 @@ namespace Spellenbakkerij {
 			}
 
 			// Controleer normale schedule.
-			if (AudioSettings.dspTime + ScheduleAheadDuration <= this._scheduleEndTime) { return; }
+			if (AudioSettings.dspTime + ScheduleAheadDuration + MusicPreparationDelay <= this._scheduleEndTime) { return; }
 
 			Clip[] GetClips() {
 				switch (this._lastScheduledMusicSetPart) {
@@ -151,7 +151,7 @@ namespace Spellenbakkerij {
 			this._scheduleEndTime = Math.Max(timeToPlay + clip.Duration, this._scheduleEndTime);
 
 			yield return new WaitForSecondsRealtime((float) ((timeToPlay - AudioSettings.dspTime) - MusicPreparationDelay));
-			Debug.Log($"AudioSystem.ScheduleEnqueueClipAt(): {AudioSettings.dspTime} > Enqueue \"{clip.audioClip.name}\" at {timeToPlay}");
+			Debug.Log($"AudioSystem.ScheduleEnqueueClipAt(): {AudioSettings.dspTime} > Enqueue \"{clip.audioClip.name}\" at {timeToPlay}, _scheduleEndTime {this._scheduleEndTime}");
 			Debug.Log($"AudioSystem.ScheduleEnqueueClipAt(): {AudioSettings.dspTime} > {this._activeMusicSource.GetInstanceID()} > {clip.audioClip.name}, _musicCurrentPlayingEndTime={_clipEndTime}");
 
 			this.ToggleMusicSource();
